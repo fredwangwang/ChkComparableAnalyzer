@@ -647,5 +647,73 @@ namespace TestNamespace
 
             await VerifyCS.VerifyAnalyzerAsync(test, expected);
         }
+
+        [TestMethod]
+        public async Task TestEntityFrameworkStyleOrderBy_NoDiagnostic()
+        {
+            var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+
+namespace TestNamespace
+{
+    class TestClass
+    {
+        public void TestMethod()
+        {
+            IQueryable<Person> query = new List<Person>().AsQueryable();
+            
+            Expression<Func<Person, string>> expression = p => p.Name;
+            var result = query.OrderBy(expression); // Should detect string is comparable
+        }
+    }
+
+    public class Person
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+}";
+
+            await VerifyCS.VerifyAnalyzerAsync(test);
+        }
+
+        [TestMethod]
+        public async Task TestEntityFrameworkStyleOrderByNonComparable_Diagnostic()
+        {
+            var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+
+namespace TestNamespace
+{
+    class TestClass
+    {
+        public void TestMethod()
+        {
+            IQueryable<Person> query = new List<Person>().AsQueryable();
+            
+            Expression<Func<Person, Person>> expression = p => p;
+            var result = query.OrderBy(expression); // Person is not comparable
+        }
+    }
+
+    public class Person
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+}";
+
+            var expected = VerifyCS.Diagnostic(ChkComparable.ChkComparableAnalyzer.DiagnosticId)
+                .WithSpan(16, 40, 16, 50)
+                .WithArguments("Person");
+
+            await VerifyCS.VerifyAnalyzerAsync(test, expected);
+        }
     }
 }

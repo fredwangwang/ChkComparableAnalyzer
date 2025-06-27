@@ -141,13 +141,33 @@ namespace ChkComparable
             
             // Handle delegate types (like Func<T, string>)
             var delegateTypeInfo = semanticModel.GetTypeInfo(keySelector);
-            if (delegateTypeInfo.Type is INamedTypeSymbol namedType && 
-                namedType.OriginalDefinition.ToString().StartsWith("System.Func<"))
+            if (delegateTypeInfo.Type is INamedTypeSymbol namedType)
             {
-                // For Func<T1, T2, ..., TResult>, the last type argument is the return type
-                if (namedType.TypeArguments.Length > 0)
+                // Handle Expression<Func<...>> (used in Entity Framework)
+                if (namedType.OriginalDefinition.ToString().StartsWith("System.Linq.Expressions.Expression<"))
                 {
-                    return namedType.TypeArguments[namedType.TypeArguments.Length - 1];
+                    if (namedType.TypeArguments.Length == 1)
+                    {
+                        var funcType = namedType.TypeArguments[0];
+                        if (funcType is INamedTypeSymbol funcNamedType && 
+                            funcNamedType.OriginalDefinition.ToString().StartsWith("System.Func<"))
+                        {
+                            // For Func<T1, T2, ..., TResult>, the last type argument is the return type
+                            if (funcNamedType.TypeArguments.Length > 0)
+                            {
+                                return funcNamedType.TypeArguments[funcNamedType.TypeArguments.Length - 1];
+                            }
+                        }
+                    }
+                }
+                // Handle direct Func<...> types
+                else if (namedType.OriginalDefinition.ToString().StartsWith("System.Func<"))
+                {
+                    // For Func<T1, T2, ..., TResult>, the last type argument is the return type
+                    if (namedType.TypeArguments.Length > 0)
+                    {
+                        return namedType.TypeArguments[namedType.TypeArguments.Length - 1];
+                    }
                 }
             }
             
