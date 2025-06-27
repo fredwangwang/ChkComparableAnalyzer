@@ -86,5 +86,32 @@ namespace ChkComparable {
                 return ResourceManager.GetString("AnalyzerTitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types like &apos;dynamic&apos; or &apos;object&apos; used in LINQ OrderBy/OrderByDescending may not be comparable at runtime..
+        /// </summary>
+        internal static string WarningAnalyzerDescription {
+            get {
+                return ResourceManager.GetString("WarningAnalyzerDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type &apos;{0}&apos; used in LINQ OrderBy/OrderByDescending may not be comparable at runtime. Consider using a strongly-typed key selector or providing a custom comparer..
+        /// </summary>
+        internal static string WarningAnalyzerMessageFormat {
+            get {
+                return ResourceManager.GetString("WarningAnalyzerMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LINQ OrderBy/OrderByDescending with potentially non-comparable types.
+        /// </summary>
+        internal static string WarningAnalyzerTitle {
+            get {
+                return ResourceManager.GetString("WarningAnalyzerTitle", resourceCulture);
+            }
+        }
     }
 }

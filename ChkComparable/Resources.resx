@@ -118,15 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnalyzerDescription" xml:space="preserve">
-    <value>Type names should be all uppercase.</value>
+    <value>Types used in LINQ OrderBy/OrderByDescending should be comparable or a custom comparer should be provided.</value>
     <comment>An optional longer localizable description of the diagnostic.</comment>
   </data>
   <data name="AnalyzerMessageFormat" xml:space="preserve">
-    <value>Type name '{0}' contains lowercase letters</value>
+    <value>Type '{0}' used in LINQ OrderBy/OrderByDescending is not comparable. Consider implementing IComparable&lt;T&gt;, IComparable, or providing a custom comparer.</value>
     <comment>The format-able message the diagnostic displays.</comment>
   </data>
   <data name="AnalyzerTitle" xml:space="preserve">
-    <value>Check whether linq params are actually comparable</value>
+    <value>LINQ OrderBy/OrderByDescending requires comparable types</value>
     <comment>The title of the diagnostic.</comment>
+  </data>
+  <data name="WarningAnalyzerTitle" xml:space="preserve">
+    <value>LINQ OrderBy/OrderByDescending with potentially non-comparable types</value>
+    <comment>The title of the warning diagnostic.</comment>
+  </data>
+  <data name="WarningAnalyzerMessageFormat" xml:space="preserve">
+    <value>Type '{0}' used in LINQ OrderBy/OrderByDescending may not be comparable at runtime. Consider using a strongly-typed key selector or providing a custom comparer.</value>
+    <comment>The format-able message the warning diagnostic displays.</comment>
+  </data>
+  <data name="WarningAnalyzerDescription" xml:space="preserve">
+    <value>Types like 'dynamic' or 'object' used in LINQ OrderBy/OrderByDescending may not be comparable at runtime.</value>
+    <comment>An optional longer localizable description of the warning diagnostic.</comment>
   </data>
 </root>
